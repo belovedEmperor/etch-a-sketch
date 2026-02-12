@@ -5,15 +5,39 @@ function createGrid(width, height) {
     const row = document.createElement("div");
     row.classList.add("row");
     for (let i = 0; i < height; i++) {
+      const color = [
+        Math.trunc(Math.random() * 255 + 1),
+        Math.trunc(Math.random() * 255 + 1),
+        Math.trunc(Math.random() * 255 + 1),
+      ];
       const square = document.createElement("div");
       square.classList.add("square");
-      square.onmouseover = () => {
-        square.classList.add("colored");
+      square.onmouseover = (event) => {
+        handleHover(event, color);
       };
 
       row.appendChild(square);
     }
     grid.appendChild(row);
+  }
+}
+
+function handleHover(event, color) {
+  if (
+    !event.target.style.backgroundColor ||
+    event.target.style.backgroundColor === ""
+  ) {
+    event.target.style.backgroundColor = `rgba(${color[0]},${color[1]},${color[2]},0.1)`;
+  } else {
+    const originalColor = event.target.style.backgroundColor;
+    if (!originalColor.includes("rgba")) return;
+
+    let newColor = originalColor.split(",");
+    const oldAlpha = Number(newColor[3].trim().replace(")", ""));
+    const newAlpha = oldAlpha + 0.1;
+    newColor[3] = ` ${String(newAlpha)})`;
+    newColor = newColor.join(",");
+    event.target.style.backgroundColor = newColor;
   }
 }
 
